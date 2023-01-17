@@ -1,1 +1,2 @@
 # nyelvhelyesseg
+Magyar helyesírás ellenőrző.
