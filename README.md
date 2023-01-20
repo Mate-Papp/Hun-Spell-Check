@@ -4,7 +4,7 @@ Magyar helyesírás ellenőrző. (Hungarian spell checker)
 
 Please download files and put inside one dir.
 
-When that's complete, open the Base.py file and run.
+When that's complete, open the Check.py file and run.
 
 Write a long sentence into the terminal and wait for the response.
 
