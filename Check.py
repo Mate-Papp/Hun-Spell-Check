@@ -42,39 +42,40 @@ def str_auto_repair(sentence_base):
     sentence_base = sentence_base.upper() 
     sentence = sentence_base.split()
     sentence2=[]
-    írásjelek=[]
+    punctuation_marks=[]
     file = open(directory_separate() + "Toldalék-Module.txt", "r", encoding='utf-8')
     tol = file.readlines()
     fo = open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8')
     g = fo.readlines()
-    toldalék=[]
+    affix=[]
     errors=[]
     sentence3=[]
     for i in range(len(sentence)):
-        toldalék.append("")
+        affix.append("")
         sentence2.append(sentence[i].replace(".","").replace("!","").replace("+","").replace("?","").replace(",","").replace(";","").replace("_","").replace("[","").replace("]","").replace("(","").replace(")",""))
+        sentence3.append(sentence[i].replace(".","").replace("!","").replace("+","").replace("?","").replace(",","").replace(";","").replace("_","").replace("[","").replace("]","").replace("(","").replace(")","").replace(":",""))
         if len(sentence2[i])!=len(sentence[i]):
-            írásjelek.append(sentence[i][+len(sentence2[i]):] + " ")
+            punctuation_marks.append(sentence[i][+len(sentence2[i]):] + " ")
         else:
-            írásjelek.append(" ")
+            punctuation_marks.append(" ")
         if str_exists(open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'),sentence2[i])==False and len(sentence2[i])<=3:
             f = open(directory_separate() + "Lexicon-Module.txt", "a", encoding='utf-8')
             f.write(sentence2[i])
             f.write("\n")
             f.close()
-            sentence_recommendation = sentence_recommendation + sentence2[i] + írásjelek[i]
+            sentence_recommendation = sentence_recommendation + sentence2[i] + punctuation_marks[i]
         elif str_exists(open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'),sentence2[i])==False:
             b=0
             for ir in range(len(tol)):
                 tol[ir] = tol[ir].upper()
                 if sentence2[i].find(tol[ir][:-1]) != -1 and sentence2[i][:-1].find(tol[ir][:-1]) == -1 and len(tol[ir][:-1])<len(sentence2[i]):
                     if str_exists(open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'),sentence2[i][:-len(tol[ir][:-1])])!=False:
-                        sentence_recommendation = sentence_recommendation + sentence2[i] + írásjelek[i]
+                        sentence_recommendation = sentence_recommendation + sentence2[i] + punctuation_marks[i]
                         b=1
                     else:
                         sentence2[i]=sentence2[i][:-len(tol[ir][:-1])]
-                        írásjelek[i]=tol[ir][:-1]+írásjelek[i]
-                        toldalék[i]=(tol[ir][:-1])
+                        punctuation_marks[i]=tol[ir][:-1]+punctuation_marks[i]
+                        affix[i]=(tol[ir][:-1])
             if b==0:
                 errors.append(sentence3[i])
                 u=0
@@ -89,7 +90,7 @@ def str_auto_repair(sentence_base):
                             if g[s][:-1]==two_split[0]:
                                 sim_db=sim_db+1
                         if sim_db==2:
-                            sentence_recommendation = sentence_recommendation + two_split[1] + " " + two_split[0] + írásjelek[i][+len(toldalék[i]):]
+                            sentence_recommendation = sentence_recommendation + two_split[1] + " " + two_split[0] + punctuation_marks[i][+len(affix[i]):]
                             u=1
                             break
                 if u==0:       
@@ -136,8 +137,8 @@ def str_auto_repair(sentence_base):
                                 ht=lenghts[h]
                                 trt=similarities[h]
                                 hg=lineread(h+1,open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'))
-                    if hg.find(toldalék[i])!=-1 and toldalék[i]!="":
-                        hg=hg[:-len(toldalék[i])]            
+                    if hg.find(affix[i])!=-1 and affix[i]!="":
+                        hg=hg[:-len(affix[i])]            
                     if trt<len(sentence2[i])*2:
                         for w in range(len(errors)):
                             f = open(directory_separate() + "Lexicon-Module.txt", "a", encoding='utf-8')
@@ -145,11 +146,11 @@ def str_auto_repair(sentence_base):
                             f.write("\n")
                             f.close()
                         errors.clear()
-                        sentence_recommendation = sentence_recommendation + sentence2[i] + írásjelek[i]        
+                        sentence_recommendation = sentence_recommendation + sentence2[i] + punctuation_marks[i]        
                     else :
-                        sentence_recommendation = sentence_recommendation  + hg + írásjelek[i]     
+                        sentence_recommendation = sentence_recommendation  + hg + punctuation_marks[i]     
         else:
-            sentence_recommendation = sentence_recommendation + sentence2[i] + írásjelek[i]
+            sentence_recommendation = sentence_recommendation + sentence2[i] + punctuation_marks[i]
     return sentence_recommendation
 
 for i in count(0):
