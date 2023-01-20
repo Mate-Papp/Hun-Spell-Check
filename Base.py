@@ -1,10 +1,6 @@
 import random
 from itertools import count
 import os
-# -*- coding: utf-8 -*-
-#str(random.randint(0,9))
-#import hu_core_news_lg
-#nlp = hu_core_news_lg.load()
 
 def directory_separate():
     import os
@@ -39,69 +35,7 @@ def str_exists(array_or_string,word):
         y = word.upper()
         if g == y:
             return True, i
-    return False
-
-"""
-def str_auto_repair(sentence_base):
-    b=0
-    c=[""]
-    sentence_recommendation = ""
-    sentence_base = sentence_base.upper() 
-    sentence = sentence_base.split()
-    f = open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8')
-    g = f.readlines()
-    for i in range(len(sentence)):
-        sentence[i] = sentence[i].replace(".","").replace("!","").replace("+","").replace("?","").replace(",","").replace(";","").replace("_","").replace("[","").replace("]","").replace("(","").replace(")","")
-        if str_exists(open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'),sentence[i])==False and len(sentence[i])<=3:
-            f = open(directory_separate() + "Lexicon-Module.txt", "a", encoding='utf-8')
-            f.write(sentence[i].upper())
-            f.write("\n")
-            f.close()
-            sentence_recommendation = sentence_recommendation + sentence[i] + " "
-        elif str_exists(open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'),sentence[i])==False:
-            spells = [*sentence[i]] 
-            for inr in range(len(g)):
-                for ind in range(len(spells)):
-                    if g[inr].find(spells[ind])==sentence[i].find(spells[ind]) and (len(g[inr])-1>len(sentence[i])-5 and len(g[inr])-1<len(sentence[i])+3):
-                        if ind>b:
-                            b=ind
-                            c.clear()
-                            c.append(lineread(inr+1,open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8')))
-                        elif ind==b and b!=0:
-                           c.append(lineread(inr+1,open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'))) 
-                    else:
-                        break
-            if len(c)!=1:
-                all_str=["","","","","","","",""]
-                str_len=100
-                d=""
-                spells2 = spells
-                for iu in range(b+1):
-                    del spells2[0]
-                for indr in range(len(c)):
-                    import requests
-                    import json
-                sentence_recommendation = sentence_recommendation + d + "1 "               
-            else:
-                y=c[0]
-                if b<len(sentence[i])-5 :
-                    sentence_recommendation = sentence_recommendation + sentence[i] + "3 "
-                else:
-                    sentence_recommendation = sentence_recommendation + y + "4 "
-            c.clear()
-            b=0
-        elif str_exists(open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'),sentence[i])==False and len(sentence[i])<15:
-            sentence_recommendation = sentence_recommendation + sentence[i] + "5 "
-            f = open(directory_separate() + "Lexicon-Module.txt", "a", encoding='utf-8')
-            f.write(sentence[i].upper())
-            f.write("\n")
-            f.close()
-        else:
-            sentence_recommendation = sentence_recommendation + sentence[i] + " "
-    #return str(g[55188].upper().find("V")) + " , " + str(sentence[i].upper().find("V")) + spells
-    return sentence_recommendation """
-  
-  
+    return False 
 
 def str_auto_repair(sentence_base):
     sentence_recommendation = ""
@@ -119,7 +53,6 @@ def str_auto_repair(sentence_base):
     for i in range(len(sentence)):
         toldalék.append("")
         sentence2.append(sentence[i].replace(".","").replace("!","").replace("+","").replace("?","").replace(",","").replace(";","").replace("_","").replace("[","").replace("]","").replace("(","").replace(")",""))
-        sentence3.append(sentence[i].replace(".","").replace("!","").replace("+","").replace("?","").replace(",","").replace(";","").replace("_","").replace("[","").replace("]","").replace("(","").replace(")","").replace(":",""))
         if len(sentence2[i])!=len(sentence[i]):
             írásjelek.append(sentence[i][+len(sentence2[i]):] + " ")
         else:
@@ -191,43 +124,34 @@ def str_auto_repair(sentence_base):
                         lenghts.append(len(g[d]))
                     o=0
                     ht=0
+                    trt=0
                     for h in range(len(similarities)):
                         if similarities[h]>o:
                             o=similarities[h]
                             ht=lenghts[h]
+                            trt=similarities[h]
                             hg=lineread(h+1,open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'))
                         elif similarities[h]==o:
                             if ht>lenghts[h]:
                                 ht=lenghts[h]
+                                trt=similarities[h]
                                 hg=lineread(h+1,open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'))
                     if hg.find(toldalék[i])!=-1 and toldalék[i]!="":
-                        hg=hg[:-len(toldalék[i])]                    
-                    sentence_recommendation = sentence_recommendation  + hg + írásjelek[i]     
+                        hg=hg[:-len(toldalék[i])]            
+                    if trt<len(sentence2[i])*2:
+                        for w in range(len(errors)):
+                            f = open(directory_separate() + "Lexicon-Module.txt", "a", encoding='utf-8')
+                            f.write(errors[w])
+                            f.write("\n")
+                            f.close()
+                        errors.clear()
+                        sentence_recommendation = sentence_recommendation + sentence2[i] + írásjelek[i]        
+                    else :
+                        sentence_recommendation = sentence_recommendation  + hg + írásjelek[i]     
         else:
             sentence_recommendation = sentence_recommendation + sentence2[i] + írásjelek[i]
-        if len(errors)!=0:
-            for w in range(len(errors)):
-                f = open(directory_separate() + "Lexicon-Module.txt", "a", encoding='utf-8')
-                f.write(errors[w])
-                f.write("\n")
-                f.close()
-            errors.clear()
     return sentence_recommendation
 
-
-
-  #python -m pip install hu_core_news_lg-any-py3-none-any.whl
-
-            
-
-#for i in range(len(words)):
-        #f = open(directory_separate() + "Lexicon-Module.txt", "a", encoding='utf-8')
-       # f.write(str(words[i]))
-        #f.write("\n")
-        #f.close()
-
-#print(lineread(random.randint(0,78),open(directory_separate() + "Toldalék-Module.txt", "r", encoding='utf-8')))
-#print(str_exists(open(directory_separate() + "Lexicon-Module.txt", "r", encoding='utf-8'),"Ma"))
 for i in count(0):
     x = input()
     print(str_auto_repair(x)) 
